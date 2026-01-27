@@ -185,6 +185,8 @@ function populateReport() {
         html += `</ul></div>`;
     }
 
+    html += `<img src="/static/logo.png" class="report-footer-logo" alt="Logo footer">`;
+
     container.innerHTML = html;
 }
 

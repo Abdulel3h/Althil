@@ -2,6 +2,7 @@
 from fpdf import FPDF
 import datetime
 import io
+import os
 
 
 class AlthilReport(FPDF):
@@ -90,6 +91,20 @@ def generate_analysis_pdf(analysis_data: dict) -> bytes:
         "DISCLAIMER: All values in this report are estimated based on simulated data and rule-based analysis. "
         "This is a prototype system and should not be used for actual urban planning decisions without professional verification."
     )
+    
+    # Add Logo at the bottom
+    try:
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        logo_path = os.path.join(base_dir, "static", "logo.png")
+        if os.path.exists(logo_path):
+            # Place at bottom center
+            pdf.ln(10)
+            # Center the image: (page_width - img_width) / 2
+            img_width = 20
+            x_pos = (pdf.w - img_width) / 2
+            pdf.image(logo_path, x=x_pos, w=img_width)
+    except Exception as e:
+        print(f"Error adding logo to PDF: {e}")
     
     # Return as bytes
     return pdf.output(dest='S').encode('latin-1')

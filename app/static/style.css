@@ -38,6 +38,21 @@ body {
     position: relative;
 }
 
+/* Logo and Header Styling */
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+}
+
 .result-card {
     background: white;
     border-left: 5px solid var(--primary-color);
@@ -109,6 +124,18 @@ body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
+.report-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.report-logo {
+    width: 60px;
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
 .report-section {
     margin-bottom: 25px;
     padding-bottom: 15px;
@@ -155,4 +182,11 @@ ul {
 
 li {
     margin-bottom: 8px;
+}
+
+.report-footer-logo {
+    display: block;
+    margin: 30px auto 10px;
+    width: 40px;
+    opacity: 0.7;
 }

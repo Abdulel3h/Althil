@@ -1,0 +1,7 @@
+fastapi==0.110.0
+uvicorn[standard]==0.30.0
+fpdf==1.7.2
+opencv-python==4.9.0.80
+numpy==1.26.4
+pysolar==0.10
+python-multipart==0.0.9

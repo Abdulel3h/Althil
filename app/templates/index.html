@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al'thil – AI Urban Shade</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div id="sidebar">
+        <div class="logo-container">
+            <img src="/static/logo.jpg" alt="Al'thil Logo" id="app-logo">
+            <h1>Al'thil | الظِل</h1>
+        </div>
+        <p class="intro-text">Click on the map to analyze solar exposure and generate AI‑powered shade solutions.</p>
+        <div id="results">
+            <p class="placeholder waiting">Waiting for location selection...</p>
+        </div>
+        <hr>
+        <div class="image-analysis-section">
+            <h3>📸 Site Photo Analysis</h3>
+            <p><small>Upload an image to detect urban density.</small></p>
+            <input type="file" id="imageInput" accept="image/*" class="file-input" title="Upload image for analysis">
+            <button onclick="uploadImage()" class="btn-analyze">Analyze Image</button>
+            <div id="imageResult"></div>
+        </div>
+        <button id="view-report" class="btn-primary" style="margin-top:15px; display:none;">View Report</button>
+    </div>
+    <div id="map"></div>
+    <script src="/static/script.js"></script>
+</body>
+
+</html>

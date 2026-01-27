@@ -1,0 +1,158 @@
+:root {
+    --primary-color: #27ae60;
+    /* main green */
+    --secondary-color: #2c3e50;
+    /* dark text */
+    --accent-color: #00ff88;
+    /* bright accent */
+    --bg-light: #f8f9fa;
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.3);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--bg-light);
+}
+
+#sidebar {
+    width: 340px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border-right: 1px solid var(--glass-border);
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+}
+
+#map {
+    flex: 1;
+    height: 100%;
+    position: relative;
+}
+
+.result-card {
+    background: white;
+    border-left: 5px solid var(--primary-color);
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary,
+.btn-secondary {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--accent-color);
+}
+
+.btn-secondary {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: var(--primary-color);
+}
+
+/* Image analysis section */
+.image-analysis-section {
+    margin-top: 20px;
+}
+
+.file-input {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.btn-analyze {
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.btn-analyze:hover {
+    background: var(--primary-color);
+}
+
+/* Report Page Styling */
+#report-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.report-section {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.report-section h3 {
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.badge.low {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge.moderate {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge.high {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+}
+
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 8px;
+}

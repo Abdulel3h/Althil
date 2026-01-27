@@ -1,0 +1,17 @@
+# Ignore git repo
+.git
+.gitignore
+
+# Ignore local environment
+venv
+.env
+__pycache__
+*.pyc
+
+# Ignore editor settings
+.vscode
+.idea
+
+# Ignore unnecessary output
+output/
+downloads/

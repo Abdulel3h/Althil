@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <div id="sidebar">
@@ -14,15 +16,15 @@
             <img src="logo.jpg" alt="Al'thil Logo" id="app-logo">
             <h1>Al'thil | الظِل</h1>
         </div>
-        
+
         <p class="intro-text">Click on the map to analyze solar exposure and generate AI-powered cooling solutions.</p>
-        
+
         <div id="results">
             <p class="placeholder waiting">Waiting for location selection...</p>
         </div>
 
         <hr>
-        
+
         <div class="image-analysis-section">
             <h3>📸 Site Photo Analysis</h3>
             <p><small>Upload an image to detect urban density.</small></p>
@@ -32,9 +34,42 @@
         </div>
     </div>
 
-    <div id="map"></div>
+    <!-- Agent al'thil UI Container -->
+    <div id="althil-agent-container" class="collapsed">
+        <div class="agent-header" onclick="toggleAgent()">
+            <div class="agent-title">
+                <span class="status-indicator"></span>
+                <span>Agent al’thil</span>
+            </div>
+            <button class="toggle-btn" aria-label="Toggle Agent" title="Expand/Collapse">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 15l-6-6-6 6" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="agent-body">
+            <div id="agent-messages" class="message-area">
+                <div class="message system">
+                    Hello. I am al’thil. I can provide insights into urban heat patterns and cooling strategies for your
+                    selected location.
+                </div>
+            </div>
+
+            <div class="agent-input-group">
+                <textarea id="agent-input" placeholder="Ask about urban cooling..." rows="1"
+                    oninput="autoResizeInput(this)"></textarea>
+                <button id="send-agent-msg" onclick="sendAgentMessage()" class="send-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>

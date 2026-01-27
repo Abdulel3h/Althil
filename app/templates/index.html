@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css?v=2">
 </head>
 
 <body>
@@ -26,17 +26,75 @@
             <p class="placeholder waiting">Waiting for location selection...</p>
         </div>
         <hr>
-        <div class="image-analysis-section">
+        <div class="image-analysis-section reveal-item delay-3">
             <h3>📸 Site Photo Analysis</h3>
-            <p><small>Upload an image to detect urban density.</small></p>
-            <input type="file" id="imageInput" accept="image/*" class="file-input" title="Upload image for analysis">
-            <button onclick="uploadImage()" class="btn-analyze">Analyze Image</button>
+            <p><small>Detect urban density from any perspective.</small></p>
+
+            <div class="upload-container" id="dropzone">
+                <input type="file" id="imageInput" accept="image/*" class="file-input-hidden"
+                    title="Upload image for analysis">
+                <label for="imageInput" class="upload-label">
+                    <div class="upload-icon">📤</div>
+                    <div class="upload-text">
+                        <span class="main-text">Click to choose image</span>
+                        <span class="sub-text">or drag and drop here</span>
+                    </div>
+                </label>
+            </div>
+
+            <button id="analyze-image-btn" onclick="uploadImage()" class="btn-analyze btn-premium">
+                Analyze Urban Density
+            </button>
             <div id="imageResult"></div>
         </div>
         <button id="view-report" class="btn-primary" style="margin-top:15px; display:none;">View Report</button>
     </div>
     <div id="map"></div>
-    <script src="/static/script.js"></script>
+    <div id="map-overlay" onclick="toggleAgent()"></div>
+
+    <!-- Agent al'thil UI Container (Premium Redesign) -->
+    <div id="althil-agent-container">
+        <div class="agent-toggle-tab" onclick="toggleAgent()" title="Consult Agent">
+            <div class="toggle-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6" />
+                </svg>
+            </div>
+            <span class="tab-label">Agent al’thil</span>
+        </div>
+
+        <div class="agent-panel">
+            <div class="agent-header">
+                <div class="agent-title">
+                    <span class="status-indicator"></span>
+                    <span>Agent al’thil</span>
+                </div>
+            </div>
+
+            <div class="agent-body">
+                <div id="agent-messages" class="message-area">
+                    <div class="message system">
+                        Hello. I am al’thil. I can provide insights into urban heat patterns and cooling strategies for
+                        your selected location.
+                    </div>
+                </div>
+
+                <div class="agent-input-group">
+                    <textarea id="agent-input" placeholder="Ask al'thil..." rows="1"
+                        oninput="autoResizeInput(this)"></textarea>
+                    <button id="send-agent-msg" onclick="sendAgentMessage()" class="send-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js?v=2"></script>
 </body>
 
 </html>

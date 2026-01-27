@@ -1,13 +1,15 @@
 :root {
     --primary-color: #27ae60;
-    /* main green */
     --secondary-color: #2c3e50;
-    /* dark text */
     --accent-color: #00ff88;
-    /* bright accent */
     --bg-light: #f8f9fa;
     --glass-bg: rgba(255, 255, 255, 0.8);
     --glass-border: rgba(255, 255, 255, 0.3);
+
+    /* Animation Tokens */
+    --ease-standard: cubic-bezier(0.4, 0.0, 0.2, 1);
+    --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+    --time-ms: 600ms;
 }
 
 body {
@@ -30,12 +32,29 @@ body {
     display: flex;
     flex-direction: column;
     z-index: 10;
+
+    /* Initial Load State */
+    transform: translateX(-100%);
+    opacity: 0;
+    transition: transform var(--time-ms) var(--ease-out-soft),
+        opacity var(--time-ms) var(--ease-standard);
+}
+
+.loaded #sidebar {
+    transform: translateX(0);
+    opacity: 1;
 }
 
 #map {
     flex: 1;
     height: 100%;
     position: relative;
+    filter: blur(20px);
+    transition: filter 1.2s var(--ease-standard);
+}
+
+.loaded #map {
+    filter: blur(0);
 }
 
 /* Logo and Header Styling */
@@ -62,56 +81,174 @@ h1 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Unified Premium Button System */
 .btn-primary,
-.btn-secondary {
+.btn-secondary,
+.btn-premium,
+.btn-analyze {
+    position: relative;
+    overflow: hidden;
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin-top: 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition:
+        transform 0.2s var(--ease-standard),
+        background 0.3s var(--ease-standard),
+        box-shadow 0.3s var(--ease-standard),
+        filter 0.3s var(--ease-standard);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Base Colors */
 .btn-primary {
     background: var(--primary-color);
     color: white;
 }
 
-.btn-primary:hover {
-    background: var(--accent-color);
-}
-
 .btn-secondary {
     background: var(--secondary-color);
     color: white;
+}
+
+.btn-analyze {
+    background: var(--secondary-color);
+    color: white;
+}
+
+/* Ambient Light Pass */
+.btn-primary::after,
+.btn-secondary::after,
+.btn-premium::after,
+.btn-analyze::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent);
+    transition: none;
+    animation: ambientPass 6s infinite linear;
+}
+
+@keyframes ambientPass {
+    0% {
+        left: -100%;
+    }
+
+    20% {
+        left: 200%;
+    }
+
+    100% {
+        left: 200%;
+    }
+}
+
+/* Hover State */
+.btn-primary:hover,
+.btn-secondary:hover,
+.btn-premium:hover,
+.btn-analyze:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    filter: brightness(1.05);
+}
+
+.btn-primary:hover {
+    background: var(--accent-color);
+    color: var(--secondary-color);
 }
 
 .btn-secondary:hover {
     background: var(--primary-color);
 }
 
+/* Tactile Press State */
+.btn-primary:active,
+.btn-secondary:active,
+.btn-premium:active,
+.btn-analyze:active {
+    transform: scale(0.96) translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s var(--ease-standard);
+}
+
+/* Focus/Attention Pulse */
+@keyframes attentionPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.03);
+        filter: brightness(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.btn-attention {
+    animation: attentionPulse 0.8s var(--ease-standard);
+}
+
+/* Processing/Success States */
+.btn-processing {
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.btn-processing::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.4);
+    animation: shimmerProgress 1.5s infinite linear;
+}
+
+@keyframes shimmerProgress {
+    0% {
+        width: 0;
+        left: 0;
+    }
+
+    50% {
+        width: 100%;
+        left: 0;
+    }
+
+    100% {
+        width: 0;
+        left: 100%;
+    }
+}
+
+.btn-success {
+    background: #27ae60 !important;
+    box-shadow: 0 0 20px rgba(39, 174, 96, 0.5);
+    transition: all 0.5s var(--ease-standard);
+}
+
 /* Image analysis section */
 .image-analysis-section {
     margin-top: 20px;
-}
-
-.file-input {
-    width: 100%;
-    margin-bottom: 8px;
-}
-
-.btn-analyze {
-    background: var(--secondary-color);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px;
-    cursor: pointer;
-}
-
-.btn-analyze:hover {
-    background: var(--primary-color);
 }
 
 /* Premium Heat Analysis Styling */
@@ -244,4 +381,279 @@ li {
     margin: 30px auto 10px;
     width: 40px;
     opacity: 0.7;
+}
+
+/* --- Agent al’thil Premium UI Styles --- */
+#althil-agent-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    z-index: 2100;
+    transform: translateX(380px);
+    /* Hide panel by default */
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#althil-agent-container.active {
+    transform: translateX(0);
+}
+
+/* Vertical Toggle Tab */
+.agent-toggle-tab {
+    position: absolute;
+    left: -48px;
+    width: 48px;
+    height: 180px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-right: none;
+    border-radius: 12px 0 0 12px;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-standard);
+}
+
+.agent-toggle-tab:hover {
+    background: #f8f9fa;
+}
+
+.tab-label {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+    letter-spacing: 1px;
+    margin-top: 15px;
+}
+
+.toggle-arrow {
+    color: var(--primary-color);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#althil-agent-container.active .toggle-arrow {
+    transform: rotate(180deg);
+}
+
+/* Agent Panel */
+.agent-panel {
+    width: 380px;
+    height: 100vh;
+    background: #ffffff;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(0, 0, 0, 0.08);
+    opacity: 0;
+    /* Fade-in effect */
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#althil-agent-container.active .agent-panel {
+    opacity: 1;
+}
+
+.agent-header {
+    padding: 24px 30px;
+    background: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.agent-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    color: var(--secondary-color);
+    font-size: 1.1rem;
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--primary-color);
+    animation: breathing 3s infinite ease-in-out;
+}
+
+@keyframes breathing {
+
+    0%,
+    100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+.agent-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.message-area {
+    flex-grow: 1;
+    padding: 30px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scroll-behavior: smooth;
+}
+
+.message {
+    padding: 14px 18px;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 90%;
+    animation: messageEntry 0.4s ease forwards;
+}
+
+@keyframes messageEntry {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message.system {
+    background: #f0f2f5;
+    color: #333;
+    border-bottom-left-radius: 4px;
+    align-self: flex-start;
+}
+
+.message.user {
+    background: var(--secondary-color);
+    color: white;
+    border-bottom-right-radius: 4px;
+    align-self: flex-end;
+}
+
+.agent-input-group {
+    padding: 20px 30px 40px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+#agent-input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    background: #f8f9fa;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: none;
+    max-height: 150px;
+    transition: background 0.3s ease;
+}
+
+#agent-input:focus {
+    background: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.send-btn {
+    background: var(--primary-color);
+    border: none;
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s var(--ease-standard);
+}
+
+.send-btn:hover {
+    background: var(--accent-color);
+    color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.send-btn:active {
+    transform: scale(0.92);
+}
+
+/* Map Overlay for Dimming */
+#map-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.agent-active #map-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Loading Indicator */
+.agent-loading {
+    display: flex;
+    gap: 5px;
+}
+
+.agent-loading span {
+    width: 8px;
+    height: 8px;
+    background: #ccc;
+    border-radius: 50%;
+    animation: dotPulse 1.5s infinite ease-in-out;
+}
+
+.agent-loading span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.agent-loading span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes dotPulse {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }

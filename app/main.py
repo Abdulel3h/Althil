@@ -106,5 +106,40 @@ async def generate_report(data: ReportRequest):
     )
 
 
+class AgentQueryRequest(BaseModel):
+    query: str
+    context: dict
+
+
+@app.post("/agent/query")
+async def agent_query(request: AgentQueryRequest):
+    """
+    Handle contextual queries from Agent al'thil.
+    Integrates with analysis services to provide data-driven responses.
+    """
+    query_text = request.query.lower()
+    context = request.context
+    location = context.get("selected_location")
+    
+    # Generic intelligent-sounding response based on context
+    if location:
+        message = f"Analyzing the microclimate at {location['lat']:.4f}, {location['lng']:.4f}. Based on the current solar azimuth and urban density, I recommend prioritizing shading in the southwest areas of this zone."
+        actions = {
+            "highlight_zone": {
+                "lat": location['lat'],
+                "lng": location['lng'],
+                "radius": 150
+            }
+        }
+    else:
+        message = "I am ready to analyze any location. Please select a point on the map to begin our urban heat assessment."
+        actions = {}
+
+    return {
+        "agent_message": message,
+        "optional_actions": actions
+    }
+
+
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)

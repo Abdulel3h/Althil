@@ -114,6 +114,61 @@ h1 {
     background: var(--primary-color);
 }
 
+/* Premium Heat Analysis Styling */
+.btn-premium {
+    background: linear-gradient(135deg, #e67e22, #e74c3c);
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+    background: linear-gradient(135deg, #f39c12, #c0392b);
+}
+
+.heat-mode-active #map {
+    filter: saturate(1.2) contrast(1.1);
+    transition: filter 1s ease-in-out;
+}
+
+/* Tooltip Styling */
+.heat-tooltip {
+    background: rgba(44, 62, 80, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Pulse Animation for Hotspots */
+@keyframes heatPulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.9;
+        filter: brightness(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+}
+
+.hotspot-glow {
+    animation: heatPulse 2s infinite ease-in-out;
+}
+
 /* Report Page Styling */
 #report-container {
     max-width: 900px;

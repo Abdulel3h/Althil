@@ -3,6 +3,8 @@
 
 let map;
 let currentMarkers = [];
+let heatLayer = null;
+let isHeatMode = false;
 
 // Initialize map if container exists
 function initMap() {
@@ -209,7 +211,107 @@ document.addEventListener('DOMContentLoaded', () => {
     if (downloadPdfBtn) {
         downloadPdfBtn.onclick = downloadPDF;
     }
+
+    // Heat Analysis Toggle
+    const heatBtn = document.getElementById('heat-analysis-btn');
+    if (heatBtn) {
+        heatBtn.onclick = toggleHeatMode;
+    }
 });
+
+async function toggleHeatMode() {
+    isHeatMode = !isHeatMode;
+    const btn = document.getElementById('heat-analysis-btn');
+
+    if (isHeatMode) {
+        btn.textContent = "🗺️ Standard Map";
+        btn.style.background = "var(--secondary-color)";
+        document.body.classList.add('heat-mode-active');
+
+        // Smooth transition: zoom + fade
+        map.flyTo(map.getCenter(), map.getZoom() + 1, {
+            duration: 1.5,
+            easeLinearity: 0.25
+        });
+
+        // Load heat data and show progressively
+        showHeatmap();
+    } else {
+        btn.textContent = "🔥 Heat Analysis";
+        btn.style.background = ""; // Reset to CSS default
+        document.body.classList.remove('heat-mode-active');
+
+        if (heatLayer) {
+            map.removeLayer(heatLayer);
+            heatLayer = null;
+        }
+
+        map.flyTo(map.getCenter(), map.getZoom() - 1, {
+            duration: 1.5
+        });
+    }
+}
+
+function showHeatmap() {
+    // Simulated heat data points [lat, lng, intensity]
+    // In a real app, this would come from the backend analysis
+    const center = map.getCenter();
+    const points = [];
+
+    // Generate some hotspots around the center
+    for (let i = 0; i < 20; i++) {
+        const r = 0.01 * Math.sqrt(Math.random());
+        const theta = Math.random() * 2 * Math.PI;
+        points.push([
+            center.lat + r * Math.cos(theta),
+            center.lng + r * Math.sin(theta),
+            Math.random() // intensity
+        ]);
+    }
+
+    // Progressive appearance
+    let opacity = 0;
+    heatLayer = L.heatLayer(points, {
+        radius: 25,
+        blur: 15,
+        maxZoom: 17,
+        gradient: { 0.4: 'blue', 0.65: 'lime', 1: 'red' }
+    }).addTo(map);
+
+    heatLayer.setOptions({ opacity: 0 });
+
+    const fadeIn = setInterval(() => {
+        opacity += 0.05;
+        heatLayer.setOptions({ opacity: opacity });
+        if (opacity >= 0.8) clearInterval(fadeIn);
+    }, 50);
+
+    // Interaction Tooltips (Simulated with transparent circles for clicking)
+    points.filter(p => p[2] > 0.7).forEach(p => {
+        const interactiveCircle = L.circleMarker([p[0], p[1]], {
+            radius: 20,
+            fillColor: 'transparent',
+            color: 'transparent',
+            stroke: false
+        }).addTo(map);
+
+        interactiveCircle.bindTooltip("High Heat Accumulation Area (Estimated)", {
+            className: 'heat-tooltip',
+            direction: 'top',
+            sticky: true
+        });
+
+        interactiveCircle.on('mouseover', function () {
+            this.setStyle({ fillColor: 'rgba(255, 255, 255, 0.1)', stroke: true, color: 'white', weight: 1 });
+        });
+
+        interactiveCircle.on('mouseout', function () {
+            this.setStyle({ fillColor: 'transparent', stroke: false });
+        });
+
+        currentMarkers.push(interactiveCircle);
+    });
+}
 
 async function downloadPDF() {
     const stored = localStorage.getItem('althil_analysis');

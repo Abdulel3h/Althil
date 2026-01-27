@@ -7,6 +7,7 @@
     <title>Al'thil – AI Urban Shade</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
@@ -16,6 +17,11 @@
             <h1>Al'thil | الظِل</h1>
         </div>
         <p class="intro-text">Click on the map to analyze solar exposure and generate AI‑powered shade solutions.</p>
+        <hr>
+        <div class="analysis-controls">
+            <button id="heat-analysis-btn" class="btn-secondary btn-premium">🔥 Heat Analysis</button>
+        </div>
+        <hr>
         <div id="results">
             <p class="placeholder waiting">Waiting for location selection...</p>
         </div>

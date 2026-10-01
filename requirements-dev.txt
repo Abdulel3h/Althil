@@ -1,0 +1,4 @@
+-r requirements.txt
+# starlette 0.36 (pinned via fastapi 0.110) needs the httpx <0.28 TestClient API
+httpx>=0.25,<0.28
+pytest

@@ -4,13 +4,25 @@
 
 # Ignore local environment
 venv
+.venv
 .env
 __pycache__
 *.pyc
+.pytest_cache
 
 # Ignore editor settings
 .vscode
 .idea
+.sixth
+
+# Not needed inside the runtime image
+legacy/
+tests/
+docs/
+assets/
+tools/
+README.md
+requirements-dev.txt
 
 # Ignore unnecessary output
 output/

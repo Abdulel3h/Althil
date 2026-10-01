@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
+from typing import List, Optional
+import logging
 import uvicorn
 import os
 
@@ -11,14 +13,28 @@ from .services.analysis_service import get_sun_data, calculate_heat_score, gener
 from .services.image_service import analyze_urban_image
 from .services.report_service import generate_analysis_pdf
 
+logger = logging.getLogger("althil")
+
 app = FastAPI(title="al'thil API", version="1.0.0")
+
+
+def get_allowed_origins() -> List[str]:
+    """Origins allowed to call the API from another host (comma-separated env var).
+
+    The bundled UI is served by this app on the same origin and needs no entry.
+    """
+    raw = os.getenv(
+        "ALLOWED_ORIGINS",
+        "http://localhost:8000,http://127.0.0.1:8000,http://localhost:5500,http://127.0.0.1:5500",
+    )
+    return [origin.strip() for origin in raw.split(",") if origin.strip()]
+
 
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=get_allowed_origins(),
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -37,7 +53,7 @@ class ReportRequest(BaseModel):
     sun_data: dict
     heat_analysis: dict
     recommendations: dict
-    image_analysis: dict = None
+    image_analysis: Optional[dict] = None
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -54,14 +70,14 @@ async def serve_report():
 
 @app.post("/analyze")
 def run_analysis(location: LocationRequest):
-    print(f"DEBUG: Received analysis request for {location}")
+    logger.debug("Analysis request for %s", location)
     # Get sun data
     try:
         sun_data = get_sun_data(location.lat, location.lng)
-        print(f"DEBUG: Sun data: {sun_data}")
-    except Exception as e:
-        print(f"ERROR in get_sun_data: {e}")
-        raise e
+        logger.debug("Sun data: %s", sun_data)
+    except Exception:
+        logger.exception("Sun position calculation failed")
+        raise
 
     
     # Simulate urban density based on location (deterministic)
@@ -98,7 +114,7 @@ async def upload_image(file: UploadFile = File(...)):
 
 @app.post("/generate-report")
 async def generate_report(data: ReportRequest):
-    pdf_bytes = generate_analysis_pdf(data.dict())
+    pdf_bytes = generate_analysis_pdf(data.model_dump())
     return Response(
         content=pdf_bytes,
         media_type="application/pdf",

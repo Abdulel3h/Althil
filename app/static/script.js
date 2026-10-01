@@ -23,6 +23,7 @@ function initMap() {
 // Map click handler
 async function onMapClick(e) {
     const { lat, lng } = e.latlng;
+    lastSelectedLocation = e.latlng;
     clearMarkers();
 
     const resultsDiv = document.getElementById('results');
@@ -79,7 +80,7 @@ function displayMapResults(data) {
             <p><strong>Altitude:</strong> <span class="counter" data-target="${sun.altitude}">${sun.altitude}</span>°</p>
             <p><strong>Azimuth:</strong> <span class="counter" data-target="${sun.azimuth}">${sun.azimuth}</span>°</p>
         </div>
-        <h4 class="reveal-item delay-2">🌱 AI Recommended Actions:</h4>
+        <h4 class="reveal-item delay-2">🌱 Recommended Actions:</h4>
     `;
 
     resultsDiv.insertAdjacentHTML('beforeend', summaryHtml);
@@ -153,6 +154,7 @@ async function uploadImage() {
         if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
 
         const data = await response.json();
+        if (data.error) throw new Error(data.error);
         setButtonState('analyze-image-btn', 'success');
 
         const existing = JSON.parse(localStorage.getItem('althil_analysis') || '{}');
@@ -161,7 +163,8 @@ async function uploadImage() {
 
         resultDiv.innerHTML = `
             <div class="result-card reveal-item" style="background: #f0f2f5;">
-                <p><strong>Density:</strong> ${data.urban_density_score}%</p>
+                <p><strong>Urban surface:</strong> ${data.urban_density}%</p>
+                <p><strong>Vegetation:</strong> ${data.green_coverage}%</p>
                 <p>${data.recommendation}</p>
             </div>
         `;
@@ -202,11 +205,11 @@ function populateReport() {
         </div>
     `;
 
-    if (img) {
+    if (img && !img.error) {
         html += `
             <div class="report-section">
                 <h3>📸 Image Analysis</h3>
-                <p>Urban Density: ${img.urban_density_score}%</p>
+                <p>Urban surface: ${img.urban_density}% · Vegetation: ${img.green_coverage}%</p>
                 <p>${img.recommendation}</p>
             </div>
         `;
@@ -463,20 +466,8 @@ function setButtonState(buttonId, state) {
 // --- Agent al’thil Logic ---
 
 let isAgentProcessing = false;
+// Set by onMapClick so the agent knows which point is selected
 let lastSelectedLocation = null;
-
-// Track map clicks for agent context
-document.addEventListener('DOMContentLoaded', () => {
-    // Wait for map to be initialized if not already
-    const checkMap = setInterval(() => {
-        if (window.map) {
-            window.map.on('click', (e) => {
-                lastSelectedLocation = e.latlng;
-            });
-            clearInterval(checkMap);
-        }
-    }, 500);
-});
 
 function toggleAgent() {
     const container = document.getElementById('althil-agent-container');
@@ -600,10 +591,10 @@ function gatherAgentContext() {
 }
 
 function handleAgentActions(actions) {
-    if (!window.map) return;
+    if (!map) return;
 
     if (actions.map_focus) {
-        window.map.setView(actions.map_focus, 15);
+        map.setView(actions.map_focus, 15);
     }
     if (actions.highlight_zone) {
         const { lat, lng, radius } = actions.highlight_zone;
@@ -612,7 +603,7 @@ function handleAgentActions(actions) {
             fillColor: 'var(--accent-color)',
             fillOpacity: 0.2,
             radius: radius || 100
-        }).addTo(window.map);
+        }).addTo(map);
     }
     if (actions.open_report) {
         window.location.href = '/report';

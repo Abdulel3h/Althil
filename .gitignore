@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local environments
+venv/
+.venv/
+.env
+.env.*
+!.env.example
+
+# Cloud credentials (never commit)
+*service-account*.json
+*credentials*.json
+gcloud-*.json
+
+# Editors and OS
+.vscode/
+.idea/
+.sixth/
+.DS_Store
+Thumbs.db
+
+# Generated output
+*.log
+output/
+downloads/
+althil_report.pdf
